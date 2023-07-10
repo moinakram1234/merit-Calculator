@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>FAST MERIT Calculator</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+        <style>
+            /* Light Theme */
+            body.light-theme {
+                background-color: #f7f7f7;
+                color: #333;
+            }
+
+            .container.light-theme {
+                background-color: #ffffff;
+                box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+            }
+
+            .result.light-theme {
+                background-color: #f2f2f2;
+            }
+
+            /* Dark Theme */
+            body.dark-theme {
+                background-color: #333;
+                color: #f7f7f7;
+            }
+
+            .container.dark-theme {
+                background-color: #444;
+                box-shadow: 0px 0px 10px 0px rgba(255, 255, 255, 0.1);
+            }
+
+            .result.dark-theme {
+                background-color: #555;
+            }
+
+            /* Common Styles */
+            .container {
+                max-width: 500px;
+                margin: 10px auto;
+                padding: 30px;
+                border-radius: 5px;
+            }
+
+            h1 {
+                text-align: center;
+                margin-bottom: 30px;
+            }
+
+            .form-group {
+                margin-bottom: 20px;
+            }
+
+            .btn-calculate {
+                background-color: #007bff;
+                color: #fff;
+                border: none;
+            }
+
+            .result {
+                text-align: center;
+                margin-top: -40px;
+                margin-left: 100px;
+                position: absolute;
+                padding: 10px;
+                border-radius: 5px;
+            }
+            h3 {
+                    font-size: 25px; 
+                }
+
+            .college-marks-popup {
+                position: fixed;
+                top: 50%;
+                left: 85%;
+                transform: translate(-50%, -50%);
+                z-index: 9999;
+                width: 300px;
+                padding: 20px;
+                border-radius: 5px;
+                box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+                  order: 1;
+            }
+
+            .popup-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 9998;
+                display: none;
+            }
+        </style>
+        <style>
+            /* Responsive Styles */
+            @media (max-width: 576px) {
+                .container {
+                    max-width: 100%;
+                    margin: 0;
+                    padding: 20px;
+                    display: flex;
+                    /* Added */
+                    flex-direction: column;
+                    /* Added */
+                    align-items: center;
+                    /* Added */
+                }
+                h3 {
+                    font-size: 20px; 
+                }
+                 .result {
+                text-align: center;
+                margin-top: 480px;
+                
+               
+                margin-left: 120px;
+                position: absolute;
+                padding: 10px;
+                border-radius: 5px;
+            }
+
+        
+                .college-marks-popup {
+                    position: relative;
+                    width: 90%;
+                    padding: 15px;
+                    order: 2;
+                    /* Added */
+                    margin-top: 130px;
+                    margin-left: -150px;
+                    /* Added */
+                     max-width: 100%;
+                 
+                    
+                    display: flex;
+                    /* Added */
+                    flex-direction: column;
+                    /* Added */
+                    align-items: center;
+                }
+            }
+        </style>
+    </head>
+
+    <body class="light-theme">
+        <div class="container">
+            <h1>FAST Merit Calculator 2023</h1>
+            <form id="meritForm">
+                <div class="form-group">
+                    <label for="department">Department:</label>
+                    <select class="form-control" id="department" name="department">
+                        <option value="CS">Computer Science</option>
+                        <option value="EE">Electrical Engineering</option>
+                        <option value="BBA">BBA</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="fscMarks">FSC/FIRST YEAR %:</label>
+                    <input type="number" step="0.01" class="form-control" id="fscMarks" name="fscMarks" required>
+                </div>
+                <div class="form-group">
+                    <label for="matricMarks">Matric %:</label>
+                    <input type="number" step="0.01" class="form-control" id="matricMarks" name="matricMarks" required>
+                </div>
+                <div class="form-group">
+                    <label for="fastScore">NAT/FAST Test Score:</label>
+                    <input type="number" step="0.01" class="form-control" id="fastScore" name="fastScore" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-calculate">Calculate</button>
+            </form>
+            <div id="result" class="result"></div>
+        </div>
+
+        <div id="collegeMarksPopup" class="college-marks-popup">
+            <h3>Calculate Percentage</h3>
+            <form id="collegeMarksForm">
+                <div class="form-group">
+                    <label for="totalMarks">Total Marks:</label>
+                    <input type="number" step="0.01" class="form-control" id="totalMarks" name="totalMarks" required>
+                </div>
+                <div class="form-group">
+                    <label for="obtainedMarks">Obtained Marks:</label>
+                    <input type="number" step="0.01" class="form-control" id="obtainedMarks" name="obtainedMarks"
+                        required>
+                </div>
+                <button type="submit" class="btn btn-primary">Calculate Percentage</button>
+            </form>
+            <div id="collegeMarksResult" class="result"></div>
+        </div>
+
+        <div class="popup-overlay"></div>
+
+        <!-- Theme Toggle Button -->
+        <button id="themeToggle" class="btn btn-light" style="position: fixed; bottom: 10px; right: 10px;">
+        <i id="themeIcon" class="fas fa-moon"></i>
+        </button>
+
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                $("#meritForm").submit(function (event) {
+                    event.preventDefault();
+                    calculateMerit();
+                });
+
+                $("#collegeMarksForm").submit(function (event) {
+                    event.preventDefault();
+                    calculateCollegeMarks();
+                });
+
+                // Theme Toggle Functionality
+                $("#themeToggle").click(function () {
+                    $("body").toggleClass("light-theme dark-theme");
+                    $("#themeIcon").toggleClass("fas fa-moon fas fa-sun");
+                });
+            });
+
+            function calculateMerit() {
+                var department = document.getElementById("department").value;
+                var fscMarks = parseFloat(document.getElementById("fscMarks").value);
+                var matricMarks = parseFloat(document.getElementById("matricMarks").value);
+                var fastScore = parseFloat(document.getElementById("fastScore").value);
+
+                var merit = 0;
+
+                if (department === "CS" || department === "BBA") {
+                    merit = (0.4 * fscMarks) + (0.1 * matricMarks) + (0.5 * fastScore);
+                } else if (department === "EE") {
+                    merit = (0.33 * fastScore) + (0.17 * matricMarks) + (0.5 * fscMarks);
+                }
+
+                displayMerit(merit);
+            }
+
+            function displayMerit(merit) {
+                var resultElement = document.getElementById("result");
+                resultElement.innerHTML = "<h3>Merit: " + merit.toFixed(2) + "</h3>";
+            }
+
+            function calculateCollegeMarks() {
+                var totalMarks = parseFloat(document.getElementById("totalMarks").value);
+                var obtainedMarks = parseFloat(document.getElementById("obtainedMarks").value);
+
+                var percentage = (obtainedMarks / totalMarks) * 100;
+
+                displayCollegeMarks(percentage);
+            }
+
+            function displayCollegeMarks(percentage) {
+                var collegeMarksResultElement = document.getElementById("collegeMarksResult");
+                collegeMarksResultElement.innerHTML = "<h3>" + percentage.toFixed(2) + "%</h3>";
+            }
+        </script>
+        
+    </body>
+
+</html>
